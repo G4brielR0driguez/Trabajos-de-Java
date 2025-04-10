@@ -1,0 +1,219 @@
+Kata 1: Registro de Estudiantes
+===============================================================================================
+public class Estudiante {
+    private String nombre;
+    private String apellido;
+    private String curso;
+    private double calificacion;
+
+    public Estudiante(String nombre, String apellido, String curso, double calificacion) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.curso = curso;
+        this.calificacion = calificacion;
+    }
+
+    public void mostrarInfo() {
+        System.out.println("Nombre: " + nombre + ", Apellido: " + apellido + ", Curso: " + curso + ", Calificación: " + calificacion);
+    }
+
+    public void subirCalificacion(double puntos) {
+        if (calificacion + puntos > 10) {
+            calificacion = 10;
+        } else {
+            calificacion += puntos;
+        }
+    }
+
+    public void bajarCalificacion(double puntos) {
+        if (calificacion - puntos < 0) {
+            calificacion = 0;
+        } else {
+            calificacion -= puntos;
+        }
+    }
+
+    public static void main(String[] args) {
+        Estudiante estudiante = new Estudiante("Juan", "Pérez", "Matemáticas", 7.5);
+        estudiante.mostrarInfo();
+        estudiante.subirCalificacion(1.5);
+        estudiante.mostrarInfo();
+        estudiante.bajarCalificacion(2.0);
+        estudiante.mostrarInfo();
+    }
+}
+===============================================================================================
+Kata 2: Registro de Mascotas
+===============================================================================================
+public class Mascota {
+    private String nombre;
+    private String especie;
+    private int edad;
+
+    public Mascota(String nombre, String especie, int edad) {
+        this.nombre = nombre;
+        this.especie = especie;
+        this.edad = edad;
+    }
+
+    public void mostrarInfo() {
+        System.out.println("Nombre: " + nombre + ", Especie: " + especie + ", Edad: " + edad);
+    }
+
+    public void cumplirAnios() {
+        edad += 1;
+    }
+
+    public static void main(String[] args) {
+        Mascota mascota = new Mascota("Fido", "Perro", 3);
+        mascota.mostrarInfo();
+        mascota.cumplirAnios();
+        mascota.mostrarInfo();
+    }
+}
+===============================================================================================
+Kata 3: Primeros Pasos en Encapsulamiento
+===============================================================================================
+public class Libro {
+    private String titulo;
+    private String autor;
+    private int añoPublicacion;
+
+    public Libro(String titulo, String autor, int añoPublicacion) {
+        this.titulo = titulo;
+        this.autor = autor;
+        this.añoPublicacion = añoPublicacion;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public String getAutor() {
+        return autor;
+    }
+
+    public int getAñoPublicacion() {
+        return añoPublicacion;
+    }
+
+    public void setAñoPublicacion(int nuevoAño) {
+        int añoActual = 2023; // Supongamos que el año actual es 2023
+        if (nuevoAño >= 1900 && nuevoAño <= añoActual) {
+            this.añoPublicacion = nuevoAño;
+        } else {
+            System.out.println("Año inválido.");
+        }
+    }
+
+    public static void main(String[] args) {
+        Libro libro = new Libro("El Quijote", "Miguel de Cervantes", 1605);
+        System.out.println("Título: " + libro.getTitulo());
+        System.out.println("Autor: " + libro.getAutor());
+        System.out.println("Año de Publicación: " + libro.getAñoPublicacion());
+
+        libro.setAñoPublicacion(1850); // Válido
+        System.out.println("Año de Publicación actualizado: " + libro.getAñoPublicacion());
+
+        libro.setAñoPublicacion(1800); // Inválido
+    }
+}
+===============================================================================================
+Kata 4: Estado e Identidad de los Objetos
+===============================================================================================
+public class Gallina {
+    private int idGallina;
+    private int edad;
+    private int huevosPuestos;
+
+    public Gallina(int idGallina, int edad) {
+        this.idGallina = idGallina;
+        this.edad = edad;
+        this.huevosPuestos = 0;
+    }
+
+    public void ponerHuevo() {
+        huevosPuestos += 1;
+    }
+
+    public void envejecer() {
+        edad += 1;
+    }
+
+    public void mostrarEstado() {
+        System.out.println("ID Gallina: " + idGallina + ", Edad: " + edad + ", Huevos Puestos: " + huevosPuestos);
+    }
+
+    public static void main(String[] args) {
+        Gallina gallina1 = new Gallina(1, 2);
+        Gallina gallina2 = new Gallina(2, 3);
+
+        gallina1.ponerHuevo();
+        gallina2.ponerHuevo();
+        gallina2.ponerHuevo();
+
+        gallina1.envejecer();
+        gallina2.envejecer();
+
+        gallina1.mostrarEstado();
+        gallina2.mostrarEstado();
+    }
+}
+===============================================================================================
+Kata 5: Comportamiento de los Objetos
+===============================================================================================
+public class NaveEspacial {
+    private String nombre;
+    private int combustible;
+    private static final int COMBUSTIBLE_MAXIMO = 100;
+
+    public NaveEspacial(String nombre, int combustible) {
+        this.nombre = nombre;
+        if (combustible > COMBUSTIBLE_MAXIMO) {
+            this.combustible = COMBUSTIBLE_MAXIMO;
+        } else {
+            this.combustible = combustible;
+        }
+    }
+
+    public void despegar() {
+        if (combustible >= 10) {
+            combustible -= 10;
+            System.out.println("Despegando...");
+        } else {
+            System.out.println("No hay suficiente combustible para despegar.");
+        }
+    }
+
+    public void avanzar(int distancia) {
+        if (combustible >= distancia) {
+            combustible -= distancia;
+            System.out.println("Avanzando " + distancia + " unidades.");
+        } else {
+            System.out.println("No hay suficiente combustible para avanzar " + distancia + " unidades.");
+        }
+    }
+
+    public void recargarCombustible(int cantidad) {
+        if (combustible + cantidad > COMBUSTIBLE_MAXIMO) {
+            combustible = COMBUSTIBLE_MAXIMO;
+        } else {
+            combustible += cantidad;
+        }
+    }
+
+    public void mostrarEstado() {
+        System.out.println("Nave: " + nombre + ", Combustible: " + combustible);
+    }
+
+    public static void main(String[] args) {
+        NaveEspacial nave = new NaveEspacial("Apolo", 50);
+        nave.mostrarEstado();
+
+        nave.avanzar(60); // Debe fallar
+        nave.recargarCombustible(40);
+        nave.avanzar(60); // Ahora debe funcionar
+
+        nave.mostrarEstado();
+    }
+}
