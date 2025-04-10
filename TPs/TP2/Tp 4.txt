@@ -1,0 +1,59 @@
+public class Emp {
+    private int id;
+    private String nom;
+    private String pst;
+    private double sal;
+    private static int totEmp = 0;
+    private static int sigId = 1;
+
+    public Emp(int id, String nom, String pst, double sal) {
+        this.id = id;
+        this.nom = nom;
+        this.pst = pst;
+        this.sal = sal;
+        totEmp++;
+    }
+
+    public Emp(String nom, String pst) {
+        this.id = sigId++;
+        this.nom = nom;
+        this.pst = pst;
+        this.sal = 50000.0;
+        totEmp++;
+    }
+
+    public void actSal(double porc) {
+        this.sal += this.sal * porc / 100;
+    }
+
+    public void actSal(int inc) {
+        this.sal += inc;
+    }
+
+    @Override
+    public String toString() {
+        return "Emp{id=" + id + ", nom='" + nom + "', pst='" + pst + "', sal=" + sal + "}";
+    }
+
+    public static int verTotEmp() {
+        return totEmp;
+    }
+}
+
+===============
+public class TestEmp {
+    public static void main(String[] args) {
+        Emp e1 = new Emp(100, "Ana Ruiz", "Adm", 60000);
+        Emp e2 = new Emp("Luis Gómez", "Dev");
+        Emp e3 = new Emp("Marta Díaz", "HR");
+
+        e2.actSal(10);
+        e3.actSal(3000);
+
+        System.out.println(e1);
+        System.out.println(e2);
+        System.out.println(e3);
+        System.out.println("Tot Emp: " + Emp.verTotEmp());
+    }
+}
+
