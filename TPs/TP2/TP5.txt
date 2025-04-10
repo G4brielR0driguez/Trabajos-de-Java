@@ -1,0 +1,205 @@
+ Kata 1.1 (Nivel Básico)
+================================================================================
+import java.time.LocalDate;
+
+public class TicketSoporte {
+    private int id;
+    private String desc;
+    private String est;
+    private LocalDate fCreac;
+
+    public TicketSoporte(int id, String desc) {
+        this.id = id;
+        this.desc = desc;
+        this.est = "Abierto";
+        this.fCreac = LocalDate.now();
+    }
+
+    public void cerrarTicket() {
+        this.est = "Cerrado";
+    }
+
+    public String mostrarDetalle() {
+        return "ID: " + id + ", Desc: " + desc + ", Est: " + est + ", Fecha: " + fCreac;
+    }
+
+    public static void main(String[] args) {
+        TicketSoporte t = new TicketSoporte(1, "No puedo acceder al sistema");
+        System.out.println(t.mostrarDetalle());
+        t.cerrarTicket();
+        System.out.println(t.mostrarDetalle());
+    }
+}
+================================================================================
+Kata 1.2 (Nivel Medio)
+================================================================================
+public class Usuario {
+    private int id;
+    private String nom;
+    private String email;
+
+    public Usuario(int id, String nom, String email) {
+        this.id = id;
+        this.nom = nom;
+        this.email = email;
+    }
+
+    public String toString() {
+        return nom + " (" + email + ")";
+    }
+}
+###
+import java.time.LocalDate;
+
+public class TicketSoporte {
+    private int id;
+    private String desc;
+    private String est;
+    private LocalDate fCreac;
+    private Usuario usr;
+    private String tec;
+
+    public TicketSoporte(int id, String desc) {
+        this.id = id;
+        this.desc = desc;
+        this.est = "Abierto";
+        this.fCreac = LocalDate.now();
+    }
+
+    public TicketSoporte(int id, String desc, Usuario usr) {
+        this(id, desc);
+        this.usr = usr;
+    }
+
+    public void asignarTecnico(String tec) {
+        this.tec = tec;
+    }
+
+    public String mostrarDetalle() {
+        return "ID: " + id + ", Desc: " + desc + ", Est: " + est + ", Fecha: " + fCreac +
+               (usr != null ? ", Usuario: " + usr : "") +
+               (tec != null ? ", Técnico: " + tec : "");
+    }
+}
+###
+public class Main {
+    public static void main(String[] args) {
+        Usuario u = new Usuario(1, "Ana López", "ana@mail.com");
+        TicketSoporte t = new TicketSoporte(1, "Pantalla azul", u);
+        t.asignarTecnico("Carlos");
+        System.out.println(t.mostrarDetalle());
+    }
+}
+================================================================================
+Kata 1.3 (Nivel Avanzado)
+================================================================================
+public class Tecnico {
+    private int id;
+    private String nom;
+    private String esp;
+
+    public Tecnico(int id, String nom, String esp) {
+        this.id = id;
+        this.nom = nom;
+        this.esp = esp;
+    }
+
+    public String toString() {
+        return nom + " (" + esp + ")";
+    }
+}
+###
+import java.time.LocalDate;
+
+public class TicketSoporte {
+    private static int cont = 0;
+    private int id;
+    private String desc;
+    private String est;
+    private LocalDate fCreac;
+    private Usuario usr;
+    private Tecnico tec;
+
+    public TicketSoporte(String desc, Usuario usr) {
+        this.id = ++cont;
+        this.desc = desc;
+        this.est = "Abierto";
+        this.fCreac = LocalDate.now();
+        this.usr = usr;
+    }
+
+    public void asignarTecnico(Tecnico tec) {
+        this.tec = tec;
+    }
+
+    public void cerrar() {
+        this.est = "Cerrado";
+    }
+
+    public boolean estaAbierto() {
+        return est.equals("Abierto");
+    }
+
+    public String toString() {
+        return "ID: " + id + ", Desc: " + desc + ", Est: " + est + ", Fecha: " + fCreac +
+               ", Usr: " + usr + ", Tec: " + tec;
+    }
+}
+###
+import java.util.ArrayList;
+
+public class SistemaSoporte {
+    private ArrayList<TicketSoporte> lst = new ArrayList<>();
+
+    public void crearTicket(String desc, Usuario usr) {
+        lst.add(new TicketSoporte(desc, usr));
+    }
+
+    public void asignarTecnico(int id, Tecnico tec) {
+        for (TicketSoporte t : lst) {
+            if (t.toString().contains("ID: " + id + ",")) {
+                t.asignarTecnico(tec);
+            }
+        }
+    }
+
+    public void listarTickets() {
+        for (TicketSoporte t : lst) {
+            System.out.println(t);
+        }
+    }
+
+    public void listarAbiertos() {
+        for (TicketSoporte t : lst) {
+            if (t.estaAbierto()) System.out.println(t);
+        }
+    }
+
+    public void listarCerrados() {
+        for (TicketSoporte t : lst) {
+            if (!t.estaAbierto()) System.out.println(t);
+        }
+    }
+}
+###
+public class Main {
+    public static void main(String[] args) {
+        Usuario u1 = new Usuario(1, "Luis", "luis@correo.com");
+        Usuario u2 = new Usuario(2, "Marta", "marta@correo.com");
+
+        Tecnico tec1 = new Tecnico(1, "Carlos", "Redes");
+        Tecnico tec2 = new Tecnico(2, "Laura", "Software");
+
+        SistemaSoporte ss = new SistemaSoporte();
+        ss.crearTicket("Error al imprimir", u1);
+        ss.crearTicket("No anda internet", u2);
+
+        ss.asignarTecnico(1, tec1);
+        ss.asignarTecnico(2, tec2);
+
+        System.out.println("Todos:");
+        ss.listarTickets();
+        System.out.println("Abiertos:");
+        ss.listarAbiertos();
+    }
+}
