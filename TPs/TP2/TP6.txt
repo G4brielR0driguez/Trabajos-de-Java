@@ -1,0 +1,185 @@
+KATA 1 – Gestión Básica de Productos con Categoría (Nivel: Bajo)
+=================================================================================
+import java.util.*;
+
+enum CatProd { ALIMENTOS, ELECTRONICA, ROPA, HOGAR }
+
+class Prod {
+    String id, nom;
+    double p;
+    int c;
+    CatProd cat;
+
+    Prod(String id, String nom, double p, int c, CatProd cat) {
+        this.id = id; this.nom = nom; this.p = p; this.c = c; this.cat = cat;
+    }
+
+    void info() {
+        System.out.println(id + " | " + nom + " | $" + p + " | Stock: " + c + " | " + cat);
+    }
+}
+
+class Inv {
+    List<Prod> ps = new ArrayList<>();
+
+    void agr(Prod p) { ps.add(p); }
+
+    void listar() { for (Prod p : ps) p.info(); }
+}
+
+public class Kata1 {
+    public static void main(String[] args) {
+        Inv inv = new Inv();
+        inv.agr(new Prod("P1", "Pan", 500, 20, CatProd.ALIMENTOS));
+        inv.agr(new Prod("P2", "TV", 2500, 5, CatProd.ELECTRONICA));
+        inv.agr(new Prod("P3", "Camisa", 1500, 10, CatProd.ROPA));
+        inv.listar();
+    }
+}
+=================================================================================
+KATA 2 – Gestión de Stock con Búsqueda y Filtrado (Nivel: Medio)
+=================================================================================
+import java.util.*;
+
+enum CatProd { ALIMENTOS, ELECTRONICA, ROPA, HOGAR }
+
+class Prod {
+    String id, nom;
+    double p;
+    int c;
+    CatProd cat;
+
+    Prod(String id, String nom, double p, int c, CatProd cat) {
+        this.id = id; this.nom = nom; this.p = p; this.c = c; this.cat = cat;
+    }
+
+    void info() {
+        System.out.println(id + " | " + nom + " | $" + p + " | Stock: " + c + " | " + cat);
+    }
+}
+
+class Inv {
+    List<Prod> ps = new ArrayList<>();
+
+    void agr(Prod p) { ps.add(p); }
+
+    void listar() { for (Prod p : ps) p.info(); }
+
+    Prod buscar(String id) {
+        for (Prod p : ps)
+            if (p.id.equals(id)) return p;
+        return null;
+    }
+
+    void elim(String id) { ps.removeIf(p -> p.id.equals(id)); }
+
+    void actStock(String id, int nc) {
+        Prod p = buscar(id);
+        if (p != null) p.c = nc;
+    }
+
+    List<Prod> filtrarCat(CatProd cat) {
+        List<Prod> r = new ArrayList<>();
+        for (Prod p : ps)
+            if (p.cat == cat) r.add(p);
+        return r;
+    }
+}
+
+public class Kata2 {
+    public static void main(String[] args) {
+        Inv inv = new Inv();
+        inv.agr(new Prod("P1", "Pan", 500, 20, CatProd.ALIMENTOS));
+        inv.agr(new Prod("P2", "TV", 2500, 5, CatProd.ELECTRONICA));
+        inv.agr(new Prod("P3", "Camisa", 1500, 10, CatProd.ROPA));
+        inv.agr(new Prod("P4", "Silla", 3000, 3, CatProd.HOGAR));
+
+        Prod b = inv.buscar("P2");
+        if (b != null) b.info();
+
+        for (Prod p : inv.filtrarCat(CatProd.ELECTRONICA)) p.info();
+
+        inv.elim("P1");
+        inv.listar();
+    }
+}
+=================================================================================
+KATA 3 – Reportes Avanzados y Métodos en Enum (Nivel: Alto)
+=================================================================================
+import java.util.*;
+
+enum CatProd {
+    ALIMENTOS("Prod. comestibles"), ELECTRONICA("Disp. electrónicos"),
+    ROPA("Prendas de vestir"), HOGAR("Art. para el hogar");
+
+    private final String desc;
+    CatProd(String d) { desc = d; }
+    public String getDesc() { return desc; }
+}
+
+class Prod {
+    String id, nom;
+    double p;
+    int c;
+    CatProd cat;
+
+    Prod(String id, String nom, double p, int c, CatProd cat) {
+        this.id = id; this.nom = nom; this.p = p; this.c = c; this.cat = cat;
+    }
+
+    void info() {
+        System.out.println(id + " | " + nom + " | $" + p + " | Stock: " + c + " | " + cat);
+    }
+}
+
+class Inv {
+    List<Prod> ps = new ArrayList<>();
+
+    void agr(Prod p) { ps.add(p); }
+
+    int totalStock() {
+        int t = 0;
+        for (Prod p : ps) t += p.c;
+        return t;
+    }
+
+    Prod mayorStock() {
+        if (ps.isEmpty()) return null;
+        Prod max = ps.get(0);
+        for (Prod p : ps)
+            if (p.c > max.c) max = p;
+        return max;
+    }
+
+    List<Prod> filtrarPrecio(double min, double max) {
+        List<Prod> r = new ArrayList<>();
+        for (Prod p : ps)
+            if (p.p >= min && p.p <= max) r.add(p);
+        return r;
+    }
+
+    void mostrarCats() {
+        for (CatProd c : CatProd.values())
+            System.out.println(c + ": " + c.getDesc());
+    }
+}
+
+public class Kata3 {
+    public static void main(String[] args) {
+        Inv inv = new Inv();
+        inv.agr(new Prod("P1", "Pan", 500, 20, CatProd.ALIMENTOS));
+        inv.agr(new Prod("P2", "TV", 2500, 5, CatProd.ELECTRONICA));
+        inv.agr(new Prod("P3", "Camisa", 1500, 10, CatProd.ROPA));
+        inv.agr(new Prod("P4", "Silla", 3000, 3, CatProd.HOGAR));
+        inv.agr(new Prod("P5", "Móvil", 1200, 7, CatProd.ELECTRONICA));
+
+        System.out.println("Total: " + inv.totalStock());
+
+        Prod m = inv.mayorStock();
+        if (m != null) m.info();
+
+        for (Prod p : inv.filtrarPrecio(1000, 3000)) p.info();
+
+        inv.mostrarCats();
+    }
+}
